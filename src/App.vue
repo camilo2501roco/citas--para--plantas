@@ -8,8 +8,8 @@
           <div class="col-12 col-md-10 col-lg-8">
             <q-tab-panels v-model="activeTab" animated>
               <q-tab-panel name="profiles">
+                <!-- ✅ CORREGIDO: Pasar la prop myPlant -->
                 <ProfilesTab 
-                  :plant-profiles="plantProfiles" 
                   :my-plant="myPlant"
                   @select-plant="selectMyPlant"
                 />
@@ -55,7 +55,7 @@ import ProfilesTab from './components/ProfilesTab.vue';
 import MatchesTab from './components/MatchesTab.vue';
 import ChatTab from './components/ChatTab.vue';
 import AdviceDialog from './components/AdviceDialog.vue';
-import { plantProfiles } from './data/plants.js';
+import { getPlantProfiles } from './data/plants.js';
 import { checkCompatibility } from './utils/compatibility.js';
 import { sendMessageToGemini, getAdviceFromGemini } from './services/gemini.js';
 
@@ -85,7 +85,9 @@ const startChat = (plant) => {
 const sortedMatches = computed(() => {
   if (!myPlant.value) return [];
   
-  return plantProfiles
+  const profiles = getPlantProfiles();
+  
+  return profiles
     .filter(p => p.id !== myPlant.value.id)
     .map(plant => ({
       ...plant,

@@ -24,12 +24,14 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue';
 import MatchCard from './MatchCard.vue';
 
+// ✅ Asegurar que las props estén definidas
 defineProps({
   myPlant: {
     type: Object,
-    required: true
+    default: null
   },
   sortedMatches: {
     type: Array,

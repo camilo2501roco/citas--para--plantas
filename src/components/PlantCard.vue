@@ -1,20 +1,24 @@
-<template>
-  <q-card 
-    class="cursor-pointer transition-all hover-card" 
-    bordered
-    flat
-  >
+¿<template>
+  <q-card class="cursor-pointer hover-card" bordered flat @click="$emit('click')">
     <q-card-section>
       <div class="row items-start q-col-gutter-md">
         <div class="col-auto">
           <div class="text-h1">{{ plant.image }}</div>
         </div>
         <div class="col">
-          <div class="text-h6 text-weight-bold">{{ plant.name }}</div>
-          <div class="text-caption text-grey-7">{{ plant.type }} • {{ plant.age }}</div>
+          <div class="row justify-between items-start">
+            <div>
+              <div class="text-h6 text-weight-bold">{{ plant.name }}</div>
+              <div class="text-caption text-grey-7">{{ plant.type }} • {{ plant.age }}</div>
+            </div>
+          </div>
+          
           <div class="text-body2 q-mt-sm">{{ plant.bio }}</div>
           
           <div class="q-mt-md">
+               <q-chip size="sm" color="purple-9" text-color="teal-1" icon="wb_sunny">
+              {{ plant.name }}
+            </q-chip>
             <q-chip size="sm" color="yellow-2" text-color="grey-8" icon="wb_sunny">
               {{ plant.light }}
             </q-chip>
@@ -38,6 +42,8 @@ defineProps({
     required: true
   }
 });
+
+defineEmits(['click']);
 </script>
 
 <style scoped>
