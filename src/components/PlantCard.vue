@@ -38,7 +38,7 @@
             <q-chip size="sm" color="blue-2" text-color="grey-8" icon="water_drop">
               {{ planta.agua }}
             </q-chip>
-            <q-chip size="sm" color="grey-3" text-color="grey-8" icon="thermostat">
+            <q-chip size="sm" color="orange-9" text-color="grey-8" icon="thermostat">
               {{ planta.temperatura }}
             </q-chip>
           </div>

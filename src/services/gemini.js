@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const CLAVE_API_CHAT = 'AIzaSyAs7FRMFeR7vDr55uxJVGHdrHW_l4ONg0s'; // Necesitas definir esta variable
-const CLAVE_API_CONSEJOS = 'AIzaSyCTwUWBnsnnNIlMOuHJtq62EJwt-DLiBJc';
+const CLAVE_API_CHAT = 'AIzaSyAnHnLcDCN0O6ySYym6CLAq8gkSjYNglr8';
+const CLAVE_API_CONSEJOS = 'AIzaSyDKnbvhsRNyVBfMYDcBJZJGvtcJ5nH9VE8';
 const MODELO = 'gemini-2.5-flash';
 
 // Verifica que las claves API estén definidas
