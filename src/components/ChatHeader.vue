@@ -9,7 +9,15 @@
           dense
           @click="$emit('back')"
         />
-        <div class="text-h3">{{ selectedPlant?.image }}</div>
+        <!-- CAMBIO AQUÍ: -->
+        <q-img 
+          :src="selectedPlant?.image" 
+          :alt="selectedPlant?.name"
+          class="plant-avatar"
+          width="60px"
+          height="60px"
+          style="border-radius: 50%;"
+        />
         <div>
           <div class="text-h6 text-weight-bold">{{ selectedPlant?.name }}</div>
           <div class="text-caption">{{ selectedPlant?.type }}</div>

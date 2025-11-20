@@ -1,37 +1,36 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <AppHeader :my-plant="myPlant" />
+    <AppHeader :mi-planta="miPlanta" />
 
     <q-page-container>
       <q-page class="bg-green-1 q-pa-md">
         <div class="row justify-center">
           <div class="col-12 col-md-10 col-lg-8">
-            <q-tab-panels v-model="activeTab" animated>
+            <q-tab-panels v-model="pestanaActiva" animated>
               <q-tab-panel name="profiles">
-                <!-- ✅ CORREGIDO: Pasar la prop myPlant -->
                 <ProfilesTab 
-                  :my-plant="myPlant"
-                  @select-plant="selectMyPlant"
+                  :mi-planta="miPlanta"
+                  @seleccionar-planta="seleccionarMiPlanta"
                 />
               </q-tab-panel>
 
               <q-tab-panel name="matches">
                 <MatchesTab
-                  :my-plant="myPlant"
-                  :sorted-matches="sortedMatches"
-                  @start-chat="startChat"
+                  :mi-planta="miPlanta"
+                  :coincidencias-ordenadas="coincidenciasOrdenadas"
+                  @iniciar-chat="iniciarChat"
                 />
               </q-tab-panel>
 
               <q-tab-panel name="chat" class="q-pa-none">
                 <ChatTab
-                  :my-plant="myPlant"
-                  :selected-plant="selectedPlant"
-                  :messages="messages"
-                  :is-loading="isLoading"
-                  @back="activeTab = 'matches'"
-                  @send-message="sendMessage"
-                  @get-advice="getDateAdvice"
+                  :mi-planta="miPlanta"
+                  :planta-seleccionada="plantaSeleccionada"
+                  :mensajes="mensajes"
+                  :esta-cargando="estaCargando"
+                  @volver="pestanaActiva = 'matches'"
+                  @enviar-mensaje="enviarMensaje"
+                  @obtener-consejos="obtenerConsejoCita"
                 />
               </q-tab-panel>
             </q-tab-panels>
@@ -41,9 +40,9 @@
     </q-page-container>
 
     <AdviceDialog
-      v-model="showAdvice"
-      :advice="advice"
-      :is-loading="isLoading"
+      v-model="mostrarConsejos"
+      :consejo="consejo"
+      :esta-cargando="estaCargando"
     />
   </q-layout>
 </template>
@@ -55,95 +54,93 @@ import ProfilesTab from './components/ProfilesTab.vue';
 import MatchesTab from './components/MatchesTab.vue';
 import ChatTab from './components/ChatTab.vue';
 import AdviceDialog from './components/AdviceDialog.vue';
-import { getPlantProfiles } from './data/plants.js';
-import { checkCompatibility } from './utils/compatibility.js';
-import { sendMessageToGemini, getAdviceFromGemini } from './services/gemini.js';
+import { obtenerPerfilesPlantas } from './data/plants.js';
+import { verificarCompatibilidad } from './utils/compatibility.js';
+import { enviarMensajeGemini, obtenerConsejosGemini } from './services/gemini.js';
 
-const activeTab = ref('profiles');
-const myPlant = ref(null);
-const selectedPlant = ref(null);
-const messages = ref([]);
-const isLoading = ref(false);
-const showAdvice = ref(false);
-const advice = ref('');
+const pestanaActiva = ref('profiles');
+const miPlanta = ref(null);
+const plantaSeleccionada = ref(null);
+const mensajes = ref([]);
+const estaCargando = ref(false);
+const mostrarConsejos = ref(false);
+const consejo = ref('');
 
-// Provide para componentes hijos
-provide('activeTab', activeTab);
-provide('selectedPlant', selectedPlant);
+provide('pestanaActiva', pestanaActiva);
+provide('plantaSeleccionada', plantaSeleccionada);
 
-const selectMyPlant = (plant) => {
-  myPlant.value = plant;
-  activeTab.value = 'matches';
+const seleccionarMiPlanta = (planta) => {
+  miPlanta.value = planta;
+  pestanaActiva.value = 'matches';
 };
 
-const startChat = (plant) => {
-  selectedPlant.value = plant;
-  messages.value = [];
-  activeTab.value = 'chat';
+const iniciarChat = (planta) => {
+  plantaSeleccionada.value = planta;
+  mensajes.value = [];
+  pestanaActiva.value = 'chat';
 };
 
-const sortedMatches = computed(() => {
-  if (!myPlant.value) return [];
+const coincidenciasOrdenadas = computed(() => {
+  if (!miPlanta.value) return [];
   
-  const profiles = getPlantProfiles();
+  const perfiles = obtenerPerfilesPlantas();
   
-  return profiles
-    .filter(p => p.id !== myPlant.value.id)
-    .map(plant => ({
-      ...plant,
-      compatibility: checkCompatibility(myPlant.value, plant)
+  return perfiles
+    .filter(p => p.id !== miPlanta.value.id)
+    .map(planta => ({
+      ...planta,
+      compatibilidad: verificarCompatibilidad(miPlanta.value, planta)
     }))
-    .sort((a, b) => b.compatibility - a.compatibility);
+    .sort((a, b) => b.compatibilidad - a.compatibilidad);
 });
 
-const sendMessage = async (messageText) => {
-  const userMessage = {
-    sender: 'user',
-    text: messageText,
-    plant: myPlant.value.name
-  };
+const enviarMensaje = async (textoMensaje) => {
+  mensajes.value.push({
+    remitente: 'usuario',
+    texto: textoMensaje,
+    planta: miPlanta.value.nombre
+  });
 
-  messages.value.push(userMessage);
-  isLoading.value = true;
+  estaCargando.value = true;
 
   try {
-    const aiResponse = await sendMessageToGemini(
-      myPlant.value,
-      selectedPlant.value,
-      messageText
+    const respuestaIA = await enviarMensajeGemini(
+      miPlanta.value,
+      plantaSeleccionada.value,
+      textoMensaje
     );
 
-    messages.value.push({
-      sender: 'ai',
-      text: aiResponse,
-      plant: selectedPlant.value.name
+    mensajes.value.push({
+      remitente: 'ia',
+      texto: respuestaIA,
+      planta: plantaSeleccionada.value.nombre
     });
   } catch (error) {
     console.error('Error:', error);
-    messages.value.push({
-      sender: 'ai',
-      text: '¡Ups! Parece que hay problemas con mi fotosíntesis. Intenta de nuevo. 🌿',
-      plant: selectedPlant.value.name
+    mensajes.value.push({
+      remitente: 'ia',
+      texto: '¡Ups! Parece que hay problemas con mi fotosíntesis. Intenta de nuevo. 🌿',
+      planta: plantaSeleccionada.value.nombre
     });
   } finally {
-    isLoading.value = false;
+    estaCargando.value = false;
   }
 };
 
-const getDateAdvice = async () => {
-  if (!myPlant.value || !selectedPlant.value) return;
+const obtenerConsejoCita = async () => {
+  if (!miPlanta.value || !plantaSeleccionada.value) return;
   
-  isLoading.value = true;
-  showAdvice.value = true;
+  estaCargando.value = true;
+  mostrarConsejos.value = true;
 
   try {
-    const aiAdvice = await getAdviceFromGemini(myPlant.value, selectedPlant.value);
-    advice.value = aiAdvice;
+    const consejoIA = await obtenerConsejosGemini(miPlanta.value, plantaSeleccionada.value);
+    consejo.value = consejoIA;
   } catch (error) {
     console.error('Error:', error);
-    advice.value = 'Error al obtener consejos. Por favor intenta de nuevo.';
+    consejo.value = 'Error al obtener consejos. Por favor intenta de nuevo.';
   } finally {
-    isLoading.value = false;
+    estaCargando.value = false;
   }
 };
 </script>

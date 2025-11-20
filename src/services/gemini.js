@@ -1,89 +1,60 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// API Keys separadas para diferentes funciones
-const GEMINI_API_KEY_CHAT = 'AIzaSyAnHnLcDCN0O6ySYym6CLAq8gkSjYNglr8';
-const GEMINI_API_KEY_ADVICE = 'AIzaSyCTwUWBnsnnNIlMOuHJtq62EJwt-DLiBJc';
+const CLAVE_API_CHAT = 'AIzaSyAs7FRMFeR7vDr55uxJVGHdrHW_l4ONg0s'; // Necesitas definir esta variable
+const CLAVE_API_CONSEJOS = 'AIzaSyCTwUWBnsnnNIlMOuHJtq62EJwt-DLiBJc';
+const MODELO = 'gemini-2.5-flash';
 
-console.log('🔑 Inicializando Gemini APIs...');
+// Verifica que las claves API estén definidas
+if (!CLAVE_API_CHAT || !CLAVE_API_CONSEJOS) {
+  console.error('Error: Las claves API no están definidas');
+}
 
-// Instancias separadas para cada función
-const genAIChat = new GoogleGenerativeAI(GEMINI_API_KEY_CHAT);
-const genAIAdvice = new GoogleGenerativeAI(GEMINI_API_KEY_ADVICE);
+const iaChat = new GoogleGenerativeAI(CLAVE_API_CHAT);
+const iaConsejos = new GoogleGenerativeAI(CLAVE_API_CONSEJOS);
 
-// Test de conexión para ambas APIs
-(async () => {
+// Función auxiliar para generar contenido
+const generarContenido = async (ia, prompt) => {
   try {
-    console.log('🧪 Probando conexión con Gemini Chat...');
-    const modelChat = genAIChat.getGenerativeModel({ model: 'gemini-2.5-flash' });
-    const resultChat = await modelChat.generateContent('Di solo "OK CHAT"');
-    const responseChat = await resultChat.response;
-    console.log('✅ Gemini Chat conectado:', responseChat.text());
+    const modelo = ia.getGenerativeModel({ model: MODELO });
+    const resultado = await modelo.generateContent(prompt);
+    const respuesta = await resultado.response;
+    return respuesta.text();
   } catch (error) {
-    console.error('❌ Error al conectar con Gemini Chat:', error.message);
+    console.error('Error en generarContenido:', error);
+    throw error;
   }
+};
 
+export const enviarMensajeGemini = async (miPlanta, plantaSeleccionada, mensaje) => {
   try {
-    console.log('🧪 Probando conexión con Gemini Advice...');
-    const modelAdvice = genAIAdvice.getGenerativeModel({ model: 'gemini-2.5-flash' });
-    const resultAdvice = await modelAdvice.generateContent('Di solo "OK ADVICE"');
-    const responseAdvice = await resultAdvice.response;
-    console.log('✅ Gemini Advice conectado:', responseAdvice.text());
-  } catch (error) {
-    console.error('❌ Error al conectar con Gemini Advice:', error.message);
-  }
-})();
-
-// Función de chat usa su propia API key
-export const sendMessageToGemini = async (myPlant, selectedPlant, message) => {
-  try {
-    console.log('🌱 Enviando mensaje a Gemini CHAT...');
-    
-    const model = genAIChat.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-    const prompt = `Eres ${selectedPlant.name}, una planta ${selectedPlant.type}. Tu personalidad es: ${selectedPlant.bio}. 
-    Estás chateando con ${myPlant.name}, una ${myPlant.type}.
+    const prompt = `Eres ${plantaSeleccionada.nombre}, una planta ${plantaSeleccionada.tipo}. Tu personalidad es: ${plantaSeleccionada.biografia}. 
+    Estás chateando con ${miPlanta.nombre}, una ${miPlanta.tipo}.
     
     Responde de manera breve, amigable y con la personalidad de tu tipo de planta. Usa emojis ocasionalmente.
-    Menciona tus necesidades de luz (${selectedPlant.light}), agua (${selectedPlant.water}) y temperatura (${selectedPlant.temperature}) de forma natural en la conversación.
+    Menciona tus necesidades de luz (${plantaSeleccionada.luz}), agua (${plantaSeleccionada.agua}) y temperatura (${plantaSeleccionada.temperatura}) de forma natural.
     
-    Mensaje recibido: "${message}"
+    Mensaje recibido: "${mensaje}"
     
-    Responde como ${selectedPlant.name} en primera persona, de forma casual y coqueta si es apropiado.`;
+    Responde como ${plantaSeleccionada.nombre} en primera persona, de forma casual y coqueta si es apropiado.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    
-    console.log('✅ Respuesta recibida del chat');
-    return text;
+    return await generarContenido(iaChat, prompt);
   } catch (error) {
-    console.error('❌ Error al comunicarse con Gemini CHAT:', error);
-    console.error('Detalles:', error.message);
+    console.error('Error al comunicarse con Gemini Chat:', error);
     throw new Error(`No pude procesar la solicitud: ${error.message}`);
   }
 };
 
-// Función de consejos usa su propia API key
-export const getAdviceFromGemini = async (myPlant, selectedPlant) => {
+export const obtenerConsejosGemini = async (miPlanta, plantaSeleccionada) => {
   try {
-    console.log('💡 Solicitando consejos a Gemini ADVICE...');
-    console.log('Plantas:', myPlant.name, 'y', selectedPlant.name);
-    
-    const model = genAIAdvice.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
     const prompt = `Dame consejos divertidos y creativos para una "primera cita en el vivero" entre:
     
-    Planta 1: ${myPlant.name} (${myPlant.type})
-    - Luz: ${myPlant.light}
-    - Agua: ${myPlant.water}
-    - Temperatura: ${myPlant.temperature}
-    - Bio: ${myPlant.bio}
+    Planta 1: ${miPlanta.nombre} (${miPlanta.tipo})
+    - Luz: ${miPlanta.luz} | Agua: ${miPlanta.agua} | Temperatura: ${miPlanta.temperatura}
+    - Bio: ${miPlanta.biografia}
     
-    Planta 2: ${selectedPlant.name} (${selectedPlant.type})
-    - Luz: ${selectedPlant.light}
-    - Agua: ${selectedPlant.water}
-    - Temperatura: ${selectedPlant.temperature}
-    - Bio: ${selectedPlant.bio}
+    Planta 2: ${plantaSeleccionada.nombre} (${plantaSeleccionada.tipo})
+    - Luz: ${plantaSeleccionada.luz} | Agua: ${plantaSeleccionada.agua} | Temperatura: ${plantaSeleccionada.temperatura}
+    - Bio: ${plantaSeleccionada.biografia}
     
     Incluye:
     1. El lugar ideal en el vivero para la cita
@@ -93,24 +64,9 @@ export const getAdviceFromGemini = async (myPlant, selectedPlant) => {
     
     Sé creativo, divertido y mantén el tono romántico pero profesional sobre plantas.`;
 
-    console.log('📤 Enviando solicitud de consejos...');
-    const result = await model.generateContent(prompt);
-    
-    console.log('📥 Respuesta recibida');
-    const response = await result.response;
-    
-    console.log('📝 Extrayendo texto...');
-    const text = response.text();
-    
-    console.log('✅ Consejos generados exitosamente. Longitud:', text.length);
-    console.log('Primeros 100 caracteres:', text.substring(0, 100));
-    return text;
-    
+    return await generarContenido(iaConsejos, prompt);
   } catch (error) {
-    console.error('❌ Error al obtener consejos de Gemini ADVICE:');
-    console.error('Tipo:', error.name);
-    console.error('Mensaje:', error.message);
-    
+    console.error('Error al obtener consejos de Gemini:', error);
     throw new Error(`No pude generar consejos: ${error.message}`);
   }
 };

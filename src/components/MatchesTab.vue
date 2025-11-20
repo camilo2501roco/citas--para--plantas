@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-h4 text-weight-bold q-mb-sm">
-      Matches para {{ myPlant?.name }}
+      Matches para {{ miPlanta?.nombre }}
     </div>
     <div class="text-subtitle1 text-grey-7 q-mb-md">
       Plantas compatibles según sus necesidades
@@ -9,14 +9,14 @@
 
     <div class="row q-col-gutter-md">
       <div 
-        v-for="plant in sortedMatches" 
-        :key="plant.id" 
+        v-for="planta in coincidenciasOrdenadas" 
+        :key="planta.id" 
         class="col-12 col-md-6"
       >
         <MatchCard 
-          :plant="plant" 
-          :compatibility="plant.compatibility"
-          @start-chat="$emit('start-chat', plant)"
+          :planta="planta" 
+          :compatibilidad="planta.compatibilidad"
+          @iniciar-chat="$emit('iniciar-chat', planta)"
         />
       </div>
     </div>
@@ -24,20 +24,12 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import MatchCard from './MatchCard.vue';
 
-// ✅ Asegurar que las props estén definidas
 defineProps({
-  myPlant: {
-    type: Object,
-    default: null
-  },
-  sortedMatches: {
-    type: Array,
-    required: true
-  }
+  miPlanta: { type: Object, default: null },
+  coincidenciasOrdenadas: { type: Array, required: true }
 });
 
-defineEmits(['start-chat']);
+defineEmits(['iniciar-chat']);
 </script>

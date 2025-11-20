@@ -1,35 +1,42 @@
 <template>
-  <q-card bordered flat class="hover-card">
+  <q-card bordered flat class="tarjeta-hover">
     <q-card-section>
       <div class="row items-start q-col-gutter-md">
         <div class="col-auto">
-          <div class="text-h1">{{ plant.image }}</div>
+          <q-img 
+            :src="planta.imagen" 
+            :alt="planta.nombre"
+            class="plant-avatar"
+            width="60px"
+            height="60px"
+            style="border-radius: 50%;"
+          />
         </div>
         <div class="col">
           <div class="row items-start justify-between">
             <div>
-              <div class="text-h6 text-weight-bold">{{ plant.name }}</div>
-              <div class="text-caption text-grey-7">{{ plant.type }} • {{ plant.age }}</div>
+              <div class="text-h6 text-grey-5">{{ planta.nombre }}</div>
+              <div class="text-caption text-grey-7">{{ planta.tipo }} • {{ planta.edad }}</div>
             </div>
             <div class="text-center">
               <div 
                 class="text-h4 text-weight-bold"
-                :class="compatibilityColor"
+                :class="colorCompatibilidad"
               >
-                {{ compatibility }}%
+                {{ compatibilidad }}%
               </div>
               <div class="text-caption text-grey-6">match</div>
             </div>
           </div>
           
-          <div class="text-body2 q-mt-sm">{{ plant.bio }}</div>
+          <div class="text-body2 q-mt-sm">{{ planta.biografia }}</div>
           
           <q-btn 
             class="full-width q-mt-md"
             color="green-6"
             label="Iniciar Chat"
             icon="chat"
-            @click="$emit('start-chat')"
+            @click="$emit('iniciar-chat')"
             unelevated
           />
         </div>
@@ -42,31 +49,24 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  plant: {
-    type: Object,
-    required: true
-  },
-  compatibility: {
-    type: Number,
-    required: true
-  }
+  planta: { type: Object, required: true },
+  compatibilidad: { type: Number, required: true }
 });
 
-defineEmits(['start-chat']);
+defineEmits(['iniciar-chat']);
 
-const compatibilityColor = computed(() => {
-  if (props.compatibility >= 70) return 'text-green-6';
-  if (props.compatibility >= 50) return 'text-yellow-7';
+const colorCompatibilidad = computed(() => {
+  if (props.compatibilidad >= 70) return 'text-green-6';
+  if (props.compatibilidad >= 50) return 'text-yellow-7';
   return 'text-orange-6';
 });
 </script>
 
 <style scoped>
-.hover-card {
+.tarjeta-hover {
   transition: all 0.3s ease;
 }
-
-.hover-card:hover {
+.tarjeta-hover:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }

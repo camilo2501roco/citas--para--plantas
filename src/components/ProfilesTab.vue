@@ -3,7 +3,7 @@
     <div class="row justify-between items-center q-mb-md">
       <div>
         <div class="text-h4 text-weight-bold q-mb-sm">
-          {{ myPlant ? 'Cambiar mi Planta' : 'Selecciona tu Planta' }}
+          {{ miPlanta ? 'Cambiar mi Planta' : 'Selecciona tu Planta' }}
         </div>
         <div class="text-subtitle1 text-grey-7">
           Elige la planta que representarás en PlantMatch
@@ -14,60 +14,57 @@
         color="green-6" 
         icon="add" 
         label="Crear Perfil" 
-        @click="openCreateDialog"
+        @click="abrirDialogoCrear"
         unelevated
       />
     </div>
     
     <div class="row q-col-gutter-md">
-      <div v-for="plant in plantProfiles" :key="plant.id" class="col-12 col-md-6">
+      <div v-for="planta in perfilesPlantas" :key="planta.id" class="col-12 col-md-6">
         <PlantCard 
-          :plant="plant" 
-          @click="selectPlant(plant)"
+          :planta="planta" 
+          @click="seleccionarPlanta(planta)"
         />
       </div>
     </div>
 
     <CreateProfileDialog 
-      ref="createProfileDialog" 
-      @created="loadProfiles"
+      ref="dialogoCrearPerfil" 
+      @creado="cargarPerfiles"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps } from 'vue';
+import { ref, onMounted } from 'vue';
 import PlantCard from './PlantCard.vue';
 import CreateProfileDialog from './CreateProfileDialog.vue';
-import { getPlantProfiles } from '../data/plants.js';
+import { obtenerPerfilesPlantas } from '../data/plants.js';
 
-const props = defineProps({
-  myPlant: {
-    type: Object,
-    default: null
-  }
+defineProps({
+  miPlanta: { type: Object, default: null }
 });
 
-const createProfileDialog = ref();
-const plantProfiles = ref([]);
+const emit = defineEmits(['seleccionar-planta']);
 
-const emit = defineEmits(['select-plant']);
+const dialogoCrearPerfil = ref();
+const perfilesPlantas = ref([]);
 
-const loadProfiles = () => {
-  plantProfiles.value = getPlantProfiles();
+const cargarPerfiles = () => {
+  perfilesPlantas.value = obtenerPerfilesPlantas();
 };
 
-const openCreateDialog = () => {
-  if (createProfileDialog.value?.open) {
-    createProfileDialog.value.open();
+const abrirDialogoCrear = () => {
+  if (dialogoCrearPerfil.value?.open) {
+    dialogoCrearPerfil.value.open();
   }
 };
 
-const selectPlant = (plant) => {
-  emit('select-plant', plant);
+const seleccionarPlanta = (planta) => {
+  emit('seleccionar-planta', planta);
 };
 
 onMounted(() => {
-  loadProfiles();
+  cargarPerfiles();
 });
 </script>

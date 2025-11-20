@@ -13,20 +13,27 @@
           <div class="row q-col-gutter-md">
             <div class="col-4">
               <div class="text-center">
-                <div class="text-h2 q-mb-sm">{{ form.image }}</div>
-                <q-select
-                  v-model="form.image"
-                  :options="plantEmojis"
-                  label="Emoji"
+                <!-- Vista previa -->
+                <q-img 
+                  v-if="form.image"
+                  :src="form.image" 
+                  style="width: 80px; height: 80px; border-radius: 50%;"
+                  class="q-mb-sm"
+                />
+                
+                <!-- Subida de imagen -->
+                <q-file
+                  v-model="imageFile"
+                  label="Subir imagen"
+                  accept="image/*"
                   outlined
                   dense
-                  emit-value
-                  map-options
-                  color="dark"
-                  label-color="dark"
-                  options-dark
-                  popup-content-class="text-dark"
-                />
+                  @update:model-value="procesarImagen"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="attach_file" />
+                  </template>
+                </q-file>
               </div>
             </div>
             
@@ -42,7 +49,7 @@
               
               <q-select
                 v-model="form.type"
-                :options="PLANT_TYPES"
+                :options="TIPOS_PLANTA"  
                 label="Tipo de planta *"
                 outlined
                 :rules="[val => !!val || 'Selecciona un tipo']"
@@ -126,7 +133,7 @@
         <q-btn 
           label="Crear Perfil" 
           color="green-6" 
-          :disable="!form.name || !form.type || !form.bio"
+          :disable="!form.name || !form.type || !form.bio || !form.image"
           @click="createProfile"
         />
       </q-card-actions>
@@ -136,12 +143,13 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
-import { createPlantProfile, PLANT_TYPES } from '../data/plants.js';
+import { crearPerfilPlanta, TIPOS_PLANTA } from '../data/plants.js';
 
 const emit = defineEmits(['created']);
 
 const showDialog = ref(false);
 const isSubmitting = ref(false);
+const imageFile = ref(null);
 
 const form = reactive({
   name: '',
@@ -151,29 +159,22 @@ const form = reactive({
   water: 'Moderada', 
   temperature: '18-24°C',
   bio: '',
-  image: '🌱'
+  image: ''
 });
-
-const plantEmojis = [
-  { label: '🌱 Planta pequeña', value: '🌱' },
-  { label: '🌿 Planta verde', value: '🌿' },
-  { label: '🍃 Hoja', value: '🍃' },
-  { label: '🌺 Flor rosa', value: '🌺' },
-  { label: '🌷 Tulipán', value: '🌷' },
-  { label: '🌹 Rosa', value: '🌹' },
-  { label: '🌸 Flor de cerezo', value: '🌸' },
-  { label: '💐 Ramo', value: '💐' },
-  { label: '🌼 Margarita', value: '🌼' },
-  { label: '🎍 Bambú', value: '🎍' },
-  { label: '🪴 Maceta', value: '🪴' },
-  { label: '🌵 Cactus', value: '🌵' },
-  { label: '🎋 Bambú decorativo', value: '🎋' },
-  { label: '🍀 Trébol', value: '🍀' }
-];
 
 const lightOptions = ['Sol directo', 'Luz indirecta brillante', 'Luz indirecta', 'Sombra parcial', 'Sombra'];
 const waterOptions = ['Muy baja', 'Baja', 'Moderada', 'Alta', 'Muy alta'];
 const temperatureOptions = ['15-21°C', '18-24°C', '18-27°C', '20-28°C', '20-30°C'];
+
+const procesarImagen = (file) => {
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      form.image = e.target.result; // Guarda como Data URL
+    };
+    reader.readAsDataURL(file);
+  }
+};
 
 const open = () => {
   showDialog.value = true;
@@ -188,22 +189,33 @@ const resetForm = () => {
     water: 'Moderada',
     temperature: '18-24°C', 
     bio: '',
-    image: '🌱'
+    image: ''
   });
+  imageFile.value = null;
   isSubmitting.value = false;
 };
 
 const createProfile = async () => {
   if (isSubmitting.value) return;
   
-  if (!form.name || !form.type || !form.bio) {
+  if (!form.name || !form.type || !form.bio || !form.image) {
     return;
   }
   
   isSubmitting.value = true;
   
   try {
-    createPlantProfile(form);
+    crearPerfilPlanta({
+      nombre: form.name,
+      tipo: form.type,  
+      edad: form.age,
+      luz: form.light,
+      agua: form.water,
+      temperatura: form.temperature,
+      biografia: form.bio,
+      imagen: form.image
+    });
+    
     showDialog.value = false;
     resetForm();
     emit('created');
