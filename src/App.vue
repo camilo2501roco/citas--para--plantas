@@ -1,20 +1,20 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="layout-gradient">
     <AppHeader :mi-planta="miPlanta" />
 
     <q-page-container>
-      <q-page class="bg-green-1 q-pa-md">
+      <q-page class="page-gradient q-pa-md">
         <div class="row justify-center">
           <div class="col-12 col-md-10 col-lg-8">
             <q-tab-panels v-model="pestanaActiva" animated>
-              <q-tab-panel name="profiles">
+              <q-tab-panel name="profiles" class="color-blanco">
                 <ProfilesTab 
                   :mi-planta="miPlanta"
                   @seleccionar-planta="seleccionarMiPlanta"
                 />
               </q-tab-panel>
 
-              <q-tab-panel name="matches">
+              <q-tab-panel name="matches" class="color-blanco">
                 <MatchesTab
                   :mi-planta="miPlanta"
                   :coincidencias-ordenadas="coincidenciasOrdenadas"
@@ -144,3 +144,54 @@ const obtenerConsejoCita = async () => {
   }
 };
 </script>
+
+<style scoped>
+.color-blanco{
+   background: linear-gradient(135deg, 
+    #5A2A0A 0%, 
+    #7A3B12 25%, 
+    #9C4A1A 50%, 
+    #BD5921 75%, 
+    #5A2A0A 100%
+  );
+}
+
+.color-blanco{
+  background: linear-gradient(180deg, 
+    rgba(172, 70, 2, 0.764) 0%, 
+    rgba(156, 74, 26, 0.856) 50%, 
+    rgba(140, 66, 9, 0.795) 100%
+  );
+}
+.layout-gradient {
+  background: linear-gradient(135deg, #1a4d2e 0%, #2d5a3d 50%, #1f3a2c 100%);
+  min-height: 100vh;
+}
+
+
+.page-gradient {
+  background: linear-gradient(180deg, 
+    rgba(76, 175, 80, 0.1) 0%, 
+    rgba(139, 195, 74, 0.15) 50%, 
+    rgba(76, 175, 80, 0.1) 100%
+  );
+  min-height: 100vh;
+}
+
+
+.page-gradient {
+  background: linear-gradient(135deg, 
+    #4CAF50 0%, 
+    #8BC34A 25%, 
+    #66BB6A 50%, 
+    #81C784 75%, 
+    #4CAF50 100%
+  );
+}
+body {
+  background: linear-gradient(135deg, #1a4d2e 0%, #2d5a3d 50%, #1f3a2c 100%) !important;
+}
+
+
+
+</style>

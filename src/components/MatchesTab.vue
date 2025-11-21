@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div class="text-h4 text-weight-bold q-mb-sm">
+  <div >
+    <div class="text-h4 text-yellow-1 q-mb-sm">
       Matches para {{ miPlanta?.nombre }}
     </div>
-    <div class="text-subtitle1 text-grey-7 q-mb-md">
+    <div class="text-subtitle1 text-yellow-1 q-mb-md">
       Plantas compatibles según sus necesidades
     </div>
 
@@ -33,3 +33,4 @@ defineProps({
 
 defineEmits(['iniciar-chat']);
 </script>
+

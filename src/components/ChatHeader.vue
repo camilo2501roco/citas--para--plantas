@@ -1,5 +1,6 @@
 <template>
-  <q-card-section class="bg-green-6 text-white">
+  
+  <q-card-section class="bg-green-6 text-white " >
     <div class="row items-center justify-between">
       <div class="row items-center q-col-gutter-sm">
         <q-btn 
@@ -33,6 +34,7 @@
       </q-btn>
     </div>
   </q-card-section>
+  
 </template>
 
 <script setup>
@@ -45,3 +47,4 @@ defineProps({
 
 defineEmits(['back', 'get-advice']);
 </script>
+

@@ -7,7 +7,7 @@
     <div v-if="messages.length === 0" class="text-center q-mt-xl">
       <q-icon name="favorite" size="xl" color="green-4" />
       <div class="text-h6 text-grey-6 q-mt-md">¡Comienza la conversación!</div>
-      <div class="text-body2 text-grey-5">Escribe como {{ myPlant?.name }}</div>
+    
     </div>
 
     <div v-for="(msg, idx) in messages" :key="idx" class="q-mb-md">

@@ -1,12 +1,10 @@
 <template>
   <div>
-    <div class="row justify-between items-center q-mb-md">
+    <div class="row justify-between items-center q-mb-md  ">
       <div>
-        <div class="text-h4 text-weight-bold q-mb-sm">
-          {{ miPlanta ? 'Cambiar mi Planta' : 'Selecciona tu Planta' }}
-        </div>
-        <div class="text-subtitle1 text-grey-7">
-          Elige la planta que representarás en PlantMatch
+       
+        <div class="text-subtitle1 text-yellow-1">
+          Elige la planta que representarás en PlanMatch
         </div>
       </div>
       
