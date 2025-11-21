@@ -1,50 +1,46 @@
 <template>
-  
-  <q-card-section class="bg-green-1 text-white " >
-    <div class="row items-center justify-between ">
+  <q-card-section class="bg-brown-6 text-white">
+    <div class="row items-center justify-between">
       <div class="row items-center q-col-gutter-sm">
         <q-btn 
           icon="arrow_back" 
           flat 
           round 
           dense
-          @click="$emit('back')"
+          @click="$emit('volver')"
         />
-      
         <q-img 
-          :src="selectedPlant?.image" 
-          :alt="selectedPlant?.name"
+          :src="plantaSeleccionada?.imagen" 
+          :alt="plantaSeleccionada?.nombre"
           class="plant-avatar"
           width="60px"
           height="60px"
           style="border-radius: 50%;"
         />
         <div>
-          <div class="text-h6 text-weight-bold">{{ selectedPlant?.name }}</div>
-         
+          <div class="text-h6 text-weight-bold">{{ plantaSeleccionada?.nombre }}</div>
+          <div class="text-caption">{{ plantaSeleccionada?.tipo }}</div>
         </div>
       </div>
       <q-btn 
         icon="info" 
         flat 
         round 
-        @click="$emit('get-advice')"
+        @click="$emit('obtener-consejos')"
       >
         <q-tooltip>Consejos para la cita</q-tooltip>
       </q-btn>
     </div>
   </q-card-section>
-  
 </template>
 
 <script setup>
 defineProps({
-  selectedPlant: {
+  plantaSeleccionada: {
     type: Object,
     required: true
   }
 });
 
-defineEmits(['back', 'get-advice']);
+defineEmits(['volver', 'obtener-consejos']);
 </script>
-

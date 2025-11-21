@@ -15,15 +15,15 @@
               <div class="text-center">
                 <!-- Vista previa -->
                 <q-img 
-                  v-if="form.image"
-                  :src="form.image" 
+                  v-if="form.imagen"
+                  :src="form.imagen" 
                   style="width: 80px; height: 80px; border-radius: 50%;"
                   class="q-mb-sm"
                 />
                 
                 <!-- Subida de imagen -->
                 <q-file
-                  v-model="imageFile"
+                  v-model="archivoImagen"
                   label="Subir imagen"
                   accept="image/*"
                   outlined
@@ -39,7 +39,7 @@
             
             <div class="col-8">
               <q-input
-                v-model="form.name"
+                v-model="form.nombre"
                 label="Nombre de la planta *"
                 outlined
                 :rules="[val => !!val || 'Campo requerido']"
@@ -48,7 +48,7 @@
               />
               
               <q-select
-                v-model="form.type"
+                v-model="form.tipo"
                 :options="TIPOS_PLANTA"  
                 label="Tipo de planta *"
                 outlined
@@ -63,7 +63,7 @@
           </div>
 
           <q-input
-            v-model="form.age"
+            v-model="form.edad"
             label="Edad"
             outlined
             placeholder="Ej: 2 años, 6 meses"
@@ -74,8 +74,8 @@
           <div class="row q-col-gutter-md">
             <div class="col-4">
               <q-select
-                v-model="form.light"
-                :options="lightOptions"
+                v-model="form.luz"
+                :options="opcionesLuz"
                 label="Luz *"
                 outlined
                 :rules="[val => !!val || 'Campo requerido']"
@@ -87,8 +87,8 @@
             </div>
             <div class="col-4">
               <q-select
-                v-model="form.water"
-                :options="waterOptions"
+                v-model="form.agua"
+                :options="opcionesAgua"
                 label="Agua *"
                 outlined
                 :rules="[val => !!val || 'Campo requerido']"
@@ -100,8 +100,8 @@
             </div>
             <div class="col-4">
               <q-select
-                v-model="form.temperature"
-                :options="temperatureOptions"
+                v-model="form.temperatura"
+                :options="opcionesTemperatura"
                 label="Temperatura *"
                 outlined
                 :rules="[val => !!val || 'Campo requerido']"
@@ -114,7 +114,7 @@
           </div>
 
           <q-input
-            v-model="form.bio"
+            v-model="form.biografia"
             label="Biografía *"
             type="textarea"
             rows="3"
@@ -133,8 +133,8 @@
         <q-btn 
           label="Crear Perfil" 
           color="green-6" 
-          :disable="!form.name || !form.type || !form.bio || !form.image"
-          @click="createProfile"
+          :disable="!form.nombre || !form.tipo || !form.biografia || !form.imagen"
+          @click="crearPerfil"
         />
       </q-card-actions>
     </q-card>
@@ -145,32 +145,32 @@
 import { ref, reactive } from 'vue';
 import { crearPerfilPlanta, TIPOS_PLANTA } from '../data/plants.js';
 
-const emit = defineEmits(['created']);
+const emit = defineEmits(['creado']); // ← CORREGIDO: 'created' → 'creado'
 
 const showDialog = ref(false);
 const isSubmitting = ref(false);
-const imageFile = ref(null);
+const archivoImagen = ref(null);
 
 const form = reactive({
-  name: '',
-  type: '',
-  age: '1 año',
-  light: 'Luz indirecta',
-  water: 'Moderada', 
-  temperature: '18-24°C',
-  bio: '',
-  image: ''
+  nombre: '',
+  tipo: '',
+  edad: '1 año',
+  luz: 'Luz indirecta',
+  agua: 'Moderada', 
+  temperatura: '18-24°C',
+  biografia: '',
+  imagen: ''
 });
 
-const lightOptions = ['Sol directo', 'Luz indirecta brillante', 'Luz indirecta', 'Sombra parcial', 'Sombra'];
-const waterOptions = ['Muy baja', 'Baja', 'Moderada', 'Alta', 'Muy alta'];
-const temperatureOptions = ['15-21°C', '18-24°C', '18-27°C', '20-28°C', '20-30°C'];
+const opcionesLuz = ['Sol directo', 'Luz indirecta brillante', 'Luz indirecta', 'Sombra parcial', 'Sombra'];
+const opcionesAgua = ['Muy baja', 'Baja', 'Moderada', 'Alta', 'Muy alta'];
+const opcionesTemperatura = ['15-21°C', '18-24°C', '18-27°C', '20-28°C', '20-30°C'];
 
 const procesarImagen = (file) => {
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      form.image = e.target.result; // Guarda como Data URL
+      form.imagen = e.target.result;
     };
     reader.readAsDataURL(file);
   }
@@ -182,23 +182,23 @@ const open = () => {
 
 const resetForm = () => {
   Object.assign(form, {
-    name: '',
-    type: '',
-    age: '1 año',
-    light: 'Luz indirecta',
-    water: 'Moderada',
-    temperature: '18-24°C', 
-    bio: '',
-    image: ''
+    nombre: '',
+    tipo: '',
+    edad: '1 año',
+    luz: 'Luz indirecta',
+    agua: 'Moderada',
+    temperatura: '18-24°C', 
+    biografia: '',
+    imagen: ''
   });
-  imageFile.value = null;
+  archivoImagen.value = null;
   isSubmitting.value = false;
 };
 
-const createProfile = async () => {
+const crearPerfil = async () => {
   if (isSubmitting.value) return;
   
-  if (!form.name || !form.type || !form.bio || !form.image) {
+  if (!form.nombre || !form.tipo || !form.biografia || !form.imagen) {
     return;
   }
   
@@ -206,19 +206,19 @@ const createProfile = async () => {
   
   try {
     crearPerfilPlanta({
-      nombre: form.name,
-      tipo: form.type,  
-      edad: form.age,
-      luz: form.light,
-      agua: form.water,
-      temperatura: form.temperature,
-      biografia: form.bio,
-      imagen: form.image
+      nombre: form.nombre,
+      tipo: form.tipo,  
+      edad: form.edad,
+      luz: form.luz,
+      agua: form.agua,
+      temperatura: form.temperatura,
+      biografia: form.biografia,
+      imagen: form.imagen
     });
     
     showDialog.value = false;
     resetForm();
-    emit('created');
+    emit('creado'); // ← CORREGIDO: 'created' → 'creado'
     
   } catch (error) {
     console.error('Error creando perfil:', error);

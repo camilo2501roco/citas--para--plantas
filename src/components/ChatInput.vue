@@ -3,13 +3,13 @@
     <div class="row q-col-gutter-sm">
       <div class="col">
         <q-input
-          v-model="inputMessage"
-          :placeholder="`Escribe como ${myPlant?.name}...`"
+          v-model="mensajeEntrada"
+          :placeholder="`Escribe como ${miPlanta?.nombre}...`"
           outlined
           rounded
           dense
-          @keyup.enter="sendMessage"
-          :disable="isLoading"
+          @keyup.enter="enviarMensaje"
+          :disable="estaCargando"
         />
       </div>
       <div class="col-auto">
@@ -17,8 +17,8 @@
           icon="send" 
           color="green-6" 
           round 
-          @click="sendMessage"
-          :disable="isLoading || !inputMessage.trim()"
+          @click="enviarMensaje"
+          :disable="estaCargando || !mensajeEntrada.trim()"
         />
       </div>
     </div>
@@ -29,23 +29,23 @@
 import { ref } from 'vue';
 
 defineProps({
-  myPlant: {
+  miPlanta: {
     type: Object,
     required: true
   },
-  isLoading: {
+  estaCargando: {
     type: Boolean,
     default: false
   }
 });
 
-const emit = defineEmits(['send']);
+const emit = defineEmits(['enviar']);
 
-const inputMessage = ref('');
+const mensajeEntrada = ref('');
 
-const sendMessage = () => {
-  if (!inputMessage.value.trim()) return;
-  emit('send', inputMessage.value);
-  inputMessage.value = '';
+const enviarMensaje = () => {
+  if (!mensajeEntrada.value.trim()) return;
+  emit('enviar', mensajeEntrada.value);
+  mensajeEntrada.value = '';
 };
 </script>
