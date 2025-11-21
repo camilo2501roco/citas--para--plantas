@@ -1,20 +1,20 @@
 <template>
   <q-card flat bordered>
-    <!-- Header del chat -->
+    
     <ChatHeader
       :planta-seleccionada="plantaSeleccionada"
       @volver="$emit('volver')"
       @obtener-consejos="$emit('obtener-consejos')"
     />
 
-    <!-- Área de mensajes -->
+    
     <ChatMessages
       :mensajes="mensajes"
       :mi-planta="miPlanta"
       :esta-cargando="estaCargando"
     />
 
-    <!-- Input para escribir -->
+    
     <ChatInput
       :mi-planta="miPlanta"
       :esta-cargando="estaCargando"

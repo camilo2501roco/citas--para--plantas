@@ -65,7 +65,7 @@ defineEmits(['click']);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo adicional para la imagen */
+
 .plant-avatar {
   border-radius: 50%;
   object-fit: cover;

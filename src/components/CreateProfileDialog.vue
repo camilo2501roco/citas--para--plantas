@@ -13,7 +13,7 @@
           <div class="row q-col-gutter-md">
             <div class="col-4">
               <div class="text-center">
-                <!-- Vista previa -->
+              
                 <q-img 
                   v-if="form.imagen"
                   :src="form.imagen" 
@@ -21,7 +21,7 @@
                   class="q-mb-sm"
                 />
                 
-                <!-- Subida de imagen -->
+             
                 <q-file
                   v-model="archivoImagen"
                   label="Subir imagen"
@@ -145,7 +145,7 @@
 import { ref, reactive } from 'vue';
 import { crearPerfilPlanta, TIPOS_PLANTA } from '../data/plants.js';
 
-const emit = defineEmits(['creado']); // ← CORREGIDO: 'created' → 'creado'
+const emit = defineEmits(['creado']); 
 
 const showDialog = ref(false);
 const isSubmitting = ref(false);
@@ -218,7 +218,7 @@ const crearPerfil = async () => {
     
     showDialog.value = false;
     resetForm();
-    emit('creado'); // ← CORREGIDO: 'created' → 'creado'
+    emit('creado'); 
     
   } catch (error) {
     console.error('Error creando perfil:', error);

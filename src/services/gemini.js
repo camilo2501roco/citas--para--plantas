@@ -1,10 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const CLAVE_API_CHAT = 'AIzaSyAnHnLcDCN0O6ySYym6CLAq8gkSjYNglr8';
+const CLAVE_API_CHAT = 'AIzaSyD4NOfgHhV4amRwoTR8GxU5DOUyqhk3N9Y';
 const CLAVE_API_CONSEJOS = 'AIzaSyDKnbvhsRNyVBfMYDcBJZJGvtcJ5nH9VE8';
 const MODELO = 'gemini-2.5-flash';
 
-// Verifica que las claves API estén definidas
+
 if (!CLAVE_API_CHAT || !CLAVE_API_CONSEJOS) {
   console.error('Error: Las claves API no están definidas');
 }
@@ -12,7 +12,7 @@ if (!CLAVE_API_CHAT || !CLAVE_API_CONSEJOS) {
 const iaChat = new GoogleGenerativeAI(CLAVE_API_CHAT);
 const iaConsejos = new GoogleGenerativeAI(CLAVE_API_CONSEJOS);
 
-// Función auxiliar para generar contenido
+
 const generarContenido = async (ia, prompt) => {
   try {
     const modelo = ia.getGenerativeModel({ model: MODELO });
