@@ -1,7 +1,7 @@
 <template>
   
-  <q-card-section class="bg-green-6 text-white " >
-    <div class="row items-center justify-between">
+  <q-card-section class="bg-green-1 text-white " >
+    <div class="row items-center justify-between ">
       <div class="row items-center q-col-gutter-sm">
         <q-btn 
           icon="arrow_back" 
@@ -10,7 +10,7 @@
           dense
           @click="$emit('back')"
         />
-        <!-- CAMBIO AQUÍ: -->
+      
         <q-img 
           :src="selectedPlant?.image" 
           :alt="selectedPlant?.name"
@@ -21,7 +21,7 @@
         />
         <div>
           <div class="text-h6 text-weight-bold">{{ selectedPlant?.name }}</div>
-          <div class="text-caption">{{ selectedPlant?.type }}</div>
+         
         </div>
       </div>
       <q-btn 

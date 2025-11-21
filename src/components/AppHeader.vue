@@ -1,4 +1,4 @@
-<!-- AppHeader.vue -->
+
 <template>
   <q-header elevated class="header-gradient">
     <q-toolbar>

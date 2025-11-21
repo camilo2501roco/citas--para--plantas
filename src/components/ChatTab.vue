@@ -1,10 +1,10 @@
 <template>
   <q-card flat bordered>
-    <q-card-section class="bg-green-6 text-white">
+    <q-card-section class="bg-brown-6 text-white">
       <div class="row items-center justify-between">
         <div class="row items-center q-col-gutter-sm">
           <q-btn icon="arrow_back" flat round dense @click="$emit('volver')" />
-          <!-- CAMBIO AQUÍ: -->
+         
           <q-img 
             :src="plantaSeleccionada?.imagen" 
             :alt="plantaSeleccionada?.nombre"
