@@ -39,7 +39,7 @@
       </q-page>
     </q-page-container>
 
-    <AdviceDialog
+    <AdviceDialog 
       v-model="mostrarConsejos"
       :consejo="consejo"
       :esta-cargando="estaCargando"
@@ -156,13 +156,8 @@ const obtenerConsejoCita = async () => {
   );
 }
 
-.color-blanco{
-  background: linear-gradient(180deg, 
-    rgba(172, 70, 2, 0.764) 0%, 
-    rgba(156, 74, 26, 0.856) 50%, 
-    rgba(140, 66, 9, 0.795) 100%
-  );
-}
+
+
 .layout-gradient {
   background: linear-gradient(135deg, #1a4d2e 0%, #2d5a3d 50%, #1f3a2c 100%);
   min-height: 100vh;

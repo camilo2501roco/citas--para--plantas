@@ -1,5 +1,5 @@
 <template>
-  <q-card-section class="bg-brown-6 text-white">
+  <q-card-section class="degradado" >
     <div class="row items-center justify-between">
       <div class="row items-center q-col-gutter-sm">
         <q-btn 
@@ -44,3 +44,17 @@ defineProps({
 
 defineEmits(['volver', 'obtener-consejos']);
 </script>
+<style>
+.degradado{
+    background: linear-gradient(135deg, 
+    #5A2A0A 0%, 
+    #7A3B12 25%, 
+    #9C4A1A 50%, 
+    #BD5921 75%, 
+    #5A2A0A 100%
+  );
+
+
+  color: white;
+}
+</style>

@@ -32,8 +32,8 @@
           <div class="text-body2 q-mt-sm">{{ planta.biografia }}</div>
           
           <q-btn 
-            class="full-width q-mt-md"
-            color="green-6"
+            class=" q-mt-md "
+            color="green-8"
             label="Iniciar Chat"
             icon="chat"
             @click="$emit('iniciar-chat')"
