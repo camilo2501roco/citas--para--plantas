@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const CLAVE_API_CHAT = 'AIzaSyD4NOfgHhV4amRwoTR8GxU5DOUyqhk3N9Y';
-const CLAVE_API_CONSEJOS = 'AIzaSyDKnbvhsRNyVBfMYDcBJZJGvtcJ5nH9VE8';
+const CLAVE_API_CHAT = 'AIzaSyB6fWV7yRHpNX8PAUQ0_m0_Jxq_2mjTt-o';
+const CLAVE_API_CONSEJOS = 'AIzaSyCd-5CHLyndx0U5HlGyrvd7Qo_CHhyITAE';
 const MODELO = 'gemini-2.5-flash';
 
 
